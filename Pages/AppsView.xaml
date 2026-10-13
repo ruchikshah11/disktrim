@@ -1,0 +1,40 @@
+<UserControl x:Class="DiskTrim.Pages.AppsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top">
+            <TextBlock Text="Installed apps" Style="{StaticResource PageTitle}" />
+            <TextBlock Style="{StaticResource Muted}"
+                       Text="Programs by size. Uninstalling with the program's own uninstaller is the only safe way to remove a program." />
+            <WrapPanel Style="{StaticResource Toolbar}">
+                <Grid Width="260" Margin="0,0,10,6">
+                    <TextBox x:Name="SearchBox" TextChanged="Search_Changed" ToolTip="Filter by name or publisher" />
+                    <TextBlock x:Name="SearchHint" Text="Filter by name or publisher" IsHitTestVisible="False" Margin="12,0,0,0"
+                               VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                </Grid>
+                <Button Content="Reload" Click="Reload_Click" Margin="0,0,10,6" />
+            </WrapPanel>
+        </StackPanel>
+
+        <DockPanel DockPanel.Dock="Bottom" Margin="0,10,0,0">
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                <Button Content="Open install folder" Click="OpenFolder_Click" Margin="0,0,8,0" />
+                <Button Content="Uninstall…" Style="{DynamicResource AccentButtonStyle}" Click="Uninstall_Click" />
+            </StackPanel>
+            <TextBlock x:Name="Summary" Style="{StaticResource Muted}" VerticalAlignment="Center" />
+        </DockPanel>
+
+        <DataGrid x:Name="Grid" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
+                  HeadersVisibility="Column" GridLinesVisibility="None">
+            <DataGrid.Columns>
+                <DataGridTextColumn ElementStyle="{StaticResource WrapCell}" Header="Name" Binding="{Binding Name}" Width="2*" />
+                <DataGridTextColumn ElementStyle="{StaticResource WrapCell}" Header="Publisher" Binding="{Binding Publisher}" Width="*" />
+                <DataGridTextColumn ElementStyle="{StaticResource WrapCell}" Header="Version" Binding="{Binding Version}" Width="130" />
+                <DataGridTextColumn ElementStyle="{StaticResource WrapCell}" Header="Size" Binding="{Binding SizeText}" SortMemberPath="Size" Width="90" />
+                <DataGridTextColumn ElementStyle="{StaticResource WrapCell}" Header="Source" Binding="{Binding SizeSource}" Width="130" />
+                <DataGridTextColumn ElementStyle="{StaticResource WrapCell}" Header="Installed" Binding="{Binding InstalledText}" SortMemberPath="InstalledOn" Width="100" />
+                <DataGridTextColumn ElementStyle="{StaticResource WrapCell}" Header="For" Binding="{Binding Scope}" Width="110" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</UserControl>

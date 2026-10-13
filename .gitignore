@@ -1,0 +1,32 @@
+# Build output
+bin/
+obj/
+dist/
+publish/
+artifacts/
+*.user
+*.suo
+
+# IDEs
+.vs/
+.vscode/
+.idea/
+*.swp
+
+# Test results
+TestResults/
+coverage*/
+*.trx
+
+# NuGet
+*.nupkg
+packages/
+
+# Logs and local data written by the app during development
+*.log
+DiskTrim-*.html
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store

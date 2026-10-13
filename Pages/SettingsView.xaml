@@ -1,0 +1,212 @@
+<UserControl x:Class="DiskTrim.Pages.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <!-- Windows 11 Settings look: section header, then cards with icon · text · control. -->
+        <Style x:Key="Section" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="2,22,0,8" />
+        </Style>
+        <Style x:Key="SettingCard" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="Padding" Value="18,14" />
+            <Setter Property="Margin" Value="0,0,0,3" />
+        </Style>
+        <!-- Lower part of an expanded card (list under a header row). -->
+        <Style x:Key="SubCard" TargetType="Border" BasedOn="{StaticResource SettingCard}">
+            <Setter Property="CornerRadius" Value="0,0,6,6" />
+            <Setter Property="Margin" Value="0,-4,0,3" />
+            <Setter Property="Padding" Value="58,10,18,12" />
+        </Style>
+        <Style x:Key="CardIcon" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource IconFont}" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="Width" Value="40" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="CardTitle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+        <Style x:Key="CardDesc" TargetType="TextBlock" BasedOn="{StaticResource Muted}">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Margin" Value="0,2,16,0" />
+        </Style>
+        <Style x:Key="IconButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Padding" Value="8,5" />
+            <Setter Property="MinWidth" Value="0" />
+        </Style>
+        <Style x:Key="Pill" TargetType="Border">
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Padding" Value="10,2,10,3" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,0,12,0" />
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="0,0,16,16">
+            <TextBlock Text="Settings" Style="{StaticResource PageTitle}" />
+
+            <!-- Appearance -->
+            <TextBlock Text="Appearance" Style="{StaticResource Section}" />
+            <Border Style="{StaticResource SettingCard}">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Left" Text="&#xE790;" Style="{StaticResource CardIcon}" />
+                    <ComboBox x:Name="ThemeBox" DockPanel.Dock="Right" MinWidth="160" VerticalAlignment="Center"
+                              SelectionChanged="Theme_Changed" />
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="App theme" Style="{StaticResource CardTitle}" />
+                        <TextBlock Text="Light, Dark, or follow your Windows setting." Style="{StaticResource CardDesc}" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <!-- Scanning -->
+            <TextBlock Text="Scanning" Style="{StaticResource Section}" />
+            <Border Style="{StaticResource SettingCard}">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Left" Text="&#xE8B7;" Style="{StaticResource CardIcon}" />
+                    <Button DockPanel.Dock="Right" Click="AddExclusion_Click" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE710;" FontFamily="{StaticResource IconFont}" Margin="0,1,8,0" VerticalAlignment="Center" />
+                            <TextBlock Text="Add folder" />
+                        </StackPanel>
+                    </Button>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Excluded folders" Style="{StaticResource CardTitle}" />
+                        <TextBlock Text="Skipped by every scan — for example a backup drive mounted as a folder. Applies to the next scan."
+                                   Style="{StaticResource CardDesc}" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+            <Border Style="{StaticResource SubCard}">
+                <StackPanel>
+                    <TextBlock x:Name="NoExclusions" Text="No folders are excluded." Style="{StaticResource Muted}" FontSize="12" />
+                    <ItemsControl x:Name="Exclusions">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel Margin="0,3">
+                                    <Button DockPanel.Dock="Right" Style="{StaticResource IconButton}" Tag="{Binding}"
+                                            Click="RemoveExclusion_Click" ToolTip="Remove">
+                                        <TextBlock Text="&#xE74D;" FontFamily="{StaticResource IconFont}" />
+                                    </Button>
+                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" TextWrapping="Wrap" />
+                                </DockPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <!-- Automatic cleanup -->
+            <TextBlock Text="Automatic cleanup" Style="{StaticResource Section}" />
+            <Border Style="{StaticResource SettingCard}">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Left" Text="&#xE823;" Style="{StaticResource CardIcon}" />
+                    <Border x:Name="SchedulePill" DockPanel.Dock="Right" Style="{StaticResource Pill}" Margin="0">
+                        <TextBlock x:Name="SchedulePillText" FontSize="12" FontWeight="SemiBold" />
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Scheduled safe cleanup" Style="{StaticResource CardTitle}" />
+                        <TextBlock x:Name="ScheduleStatus" Style="{StaticResource CardDesc}" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+            <Border Style="{StaticResource SubCard}">
+                <StackPanel>
+                    <TextBlock x:Name="ScheduleHint" Style="{StaticResource Muted}" FontSize="12" Margin="0,0,0,10" />
+                    <WrapPanel>
+                        <TextBlock Text="Run" VerticalAlignment="Center" Margin="0,0,8,6" />
+                        <ComboBox x:Name="FrequencyBox" MinWidth="120" Margin="0,0,8,6" />
+                        <TextBlock Text="at" VerticalAlignment="Center" Margin="0,0,8,6" />
+                        <TextBox x:Name="TimeBox" Width="80" Text="12:30" Margin="0,0,16,6" VerticalContentAlignment="Center" />
+                        <Button Content="Schedule" Style="{DynamicResource AccentButtonStyle}" Click="Schedule_Click" Margin="0,0,8,6" MinWidth="100" />
+                        <Button x:Name="UnscheduleButton" Content="Turn off" Click="Unschedule_Click" Margin="0,0,0,6" MinWidth="90" />
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Windows integration -->
+            <TextBlock Text="Windows integration" Style="{StaticResource Section}" />
+            <Border Style="{StaticResource SettingCard}">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Left" Text="&#xE8A7;" Style="{StaticResource CardIcon}" />
+                    <Button x:Name="ShellButton" DockPanel.Dock="Right" MinWidth="110" VerticalAlignment="Center" Click="Shell_Click" />
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Right-click menu" Style="{StaticResource CardTitle}" />
+                        <TextBlock x:Name="ShellStatus" Style="{StaticResource CardDesc}" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+            <Border Style="{StaticResource SettingCard}">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Left" Text="&#xE749;" Style="{StaticResource CardIcon}" />
+                    <Button DockPanel.Dock="Right" Content="Save HTML report…" VerticalAlignment="Center" Click="Report_Click" />
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Report" Style="{StaticResource CardTitle}" />
+                        <TextBlock Text="A self-contained HTML page with drive usage, cleanup recommendations, biggest folders and largest files — easy to send to IT support."
+                                   Style="{StaticResource CardDesc}" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <!-- Logs -->
+            <TextBlock Text="Deletion logs" Style="{StaticResource Section}" />
+            <Border Style="{StaticResource SettingCard}">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Left" Text="&#xE81C;" Style="{StaticResource CardIcon}" />
+                    <Button DockPanel.Dock="Right" VerticalAlignment="Center" Click="OpenLogs_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE8DA;" FontFamily="{StaticResource IconFont}" Margin="0,1,8,0" VerticalAlignment="Center" />
+                            <TextBlock Text="Open logs folder" />
+                        </StackPanel>
+                    </Button>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Cleanup history" Style="{StaticResource CardTitle}" />
+                        <TextBlock Text="Every file DiskTrim deletes or moves is listed in a CSV log." Style="{StaticResource CardDesc}" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+            <Border Style="{StaticResource SubCard}">
+                <StackPanel>
+                    <TextBlock x:Name="NoLogs" Text="No cleanups yet." Style="{StaticResource Muted}" FontSize="12" />
+                    <ItemsControl x:Name="Logs">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel Margin="0,3">
+                                    <Button DockPanel.Dock="Right" Style="{StaticResource IconButton}" Tag="{Binding Path}"
+                                            Click="OpenLog_Click" ToolTip="Open">
+                                        <TextBlock Text="&#xE8A7;" FontFamily="{StaticResource IconFont}" />
+                                    </Button>
+                                    <TextBlock DockPanel.Dock="Right" Text="{Binding SizeText}" Style="{StaticResource Muted}" FontSize="12"
+                                               VerticalAlignment="Center" Margin="0,0,16,0" />
+                                    <TextBlock Text="{Binding TimeText}" Width="140" VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding Name}" Style="{StaticResource Muted}" VerticalAlignment="Center"
+                                               TextWrapping="Wrap" />
+                                </DockPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <!-- About -->
+            <TextBlock Text="About" Style="{StaticResource Section}" />
+            <Border Style="{StaticResource SettingCard}">
+                <DockPanel>
+                    <Image DockPanel.Dock="Left" Source="pack://application:,,,/Assets/DiskTrim.png" Width="28" Height="28"
+                           Margin="0,0,12,0" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality" />
+                    <Button DockPanel.Dock="Right" Content="Open data folder" VerticalAlignment="Center" Click="OpenData_Click" />
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock x:Name="AboutTitle" Style="{StaticResource CardTitle}" />
+                        <TextBlock x:Name="AboutText" Style="{StaticResource CardDesc}" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

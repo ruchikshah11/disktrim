@@ -1,0 +1,54 @@
+<UserControl x:Class="DiskTrim.Pages.TreemapView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:DiskTrim.Pages"
+             xmlns:controls="clr-namespace:DiskTrim.Controls">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="350" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.ColumnSpan="2">
+            <TextBlock Text="Treemap" Style="{StaticResource PageTitle}" />
+            <TextBlock Style="{StaticResource Muted}"
+                       Text="Every block is a folder or file; its area is its size and its colour tells whether it is safe to delete. Click a block for details, double-click to zoom in." />
+        </StackPanel>
+
+        <DockPanel Grid.Row="1" Grid.ColumnSpan="2" Margin="0,12,0,8">
+            <Button x:Name="UpButton" DockPanel.Dock="Left" Click="Up_Click" Margin="0,0,10,0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="&#xE74A;" FontFamily="{StaticResource IconFont}" Margin="0,2,6,0" />
+                    <TextBlock Text="Up" />
+                </StackPanel>
+            </Button>
+            <Button DockPanel.Dock="Left" Content="Top" Click="Top_Click" Margin="0,0,12,0" />
+            <TextBlock x:Name="CurrentText" VerticalAlignment="Center" FontWeight="SemiBold" TextWrapping="Wrap" />
+        </DockPanel>
+
+        <Border Grid.Row="2" BorderThickness="1" CornerRadius="6" ClipToBounds="True"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}">
+            <Grid>
+                <controls:TreemapElement x:Name="Map" />
+                <TextBlock x:Name="Empty" Text="Scan a drive first." Style="{StaticResource Muted}"
+                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Grid>
+        </Border>
+
+        <DockPanel Grid.Row="3" Margin="0,8,0,0">
+            <WrapPanel x:Name="Legend" DockPanel.Dock="Right" />
+            <TextBlock x:Name="HoverText" Style="{StaticResource Muted}" TextWrapping="Wrap"
+                       Text="Click a block for details." VerticalAlignment="Center" />
+        </DockPanel>
+
+        <ScrollViewer Grid.Row="1" Grid.RowSpan="3" Grid.Column="1" Margin="12,52,0,0" VerticalScrollBarVisibility="Auto">
+            <local:ItemDetails x:Name="Details" />
+        </ScrollViewer>
+    </Grid>
+</UserControl>

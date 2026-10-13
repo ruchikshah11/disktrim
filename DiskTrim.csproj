@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Console subsystem so commands print to the terminal; the window hides the console when started without arguments. -->
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>DiskTrim</AssemblyName>
+    <RootNamespace>DiskTrim</RootNamespace>
+    <StartupObject>DiskTrim.Program</StartupObject>
+    <Version>1.0</Version>
+    <Product>DiskTrim</Product>
+    <Description>Find what fills your disk and free space safely.</Description>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <!-- WPF0001: Fluent ThemeMode is marked experimental. -->
+    <NoWarn>$(NoWarn);WPF0001</NoWarn>
+    <ApplicationIcon>Assets\DiskTrim.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The test project and docs live under this folder but are not part of the app. -->
+    <Compile Remove="tests\**" />
+    <Page Remove="tests\**" />
+    <None Remove="tests\**;docs\**;dist\**" />
+    <Compile Remove="dist\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="DiskTrim.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\DiskTrim.png" />
+    <Resource Include="Assets\DiskTrim.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Program.Main decides between console and window, so App.xaml must not generate its own Main. -->
+    <ApplicationDefinition Remove="App.xaml" />
+    <Page Include="App.xaml" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,66 @@
+<UserControl x:Class="DiskTrim.Pages.HistoryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="380" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.ColumnSpan="2" Margin="0,0,0,12">
+            <TextBlock Text="History" Style="{StaticResource PageTitle}" />
+            <TextBlock Style="{StaticResource Muted}"
+                       Text="Every finished scan is remembered. Pick a scan to see what changed since the scan before it." />
+        </StackPanel>
+
+        <DockPanel Grid.Row="1">
+            <TextBlock DockPanel.Dock="Top" Text="Scans" Style="{StaticResource SectionTitle}" />
+            <ListBox x:Name="Snapshots" SelectionChanged="Snapshots_SelectionChanged" HorizontalContentAlignment="Stretch"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="0,4">
+                            <TextBlock Text="{Binding TimeText}" FontWeight="SemiBold" />
+                            <TextBlock Text="{Binding Root}" FontSize="12" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            <TextBlock Text="{Binding Detail}" Style="{StaticResource Muted}" FontSize="12" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </DockPanel>
+
+        <DockPanel Grid.Row="1" Grid.Column="1" Margin="16,0,0,0">
+            <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                    <TextBlock Text="Show changes of at least" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <ComboBox x:Name="ThresholdBox" MinWidth="100" SelectionChanged="Threshold_Changed" />
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="Changes" Style="{StaticResource SectionTitle}" />
+                    <TextBlock x:Name="ChangeSummary" Style="{StaticResource Muted}" />
+                </StackPanel>
+            </DockPanel>
+            <TextBlock DockPanel.Dock="Bottom" Style="{StaticResource Muted}" Margin="0,8,0,0"
+                       Text="Folders are listed where the change actually happened. Double-click to open in File Explorer." />
+            <DataGrid x:Name="Changes" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
+                      HeadersVisibility="Column" GridLinesVisibility="None" MouseDoubleClick="Changes_MouseDoubleClick">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="Change" SortMemberPath="Delta" Width="110">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding DeltaText}" Foreground="{Binding DeltaBrush}" FontWeight="SemiBold" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn ElementStyle="{StaticResource WrapCell}" Header="Before" Binding="{Binding BeforeText}" SortMemberPath="Before" Width="100" />
+                    <DataGridTextColumn ElementStyle="{StaticResource WrapCell}" Header="After" Binding="{Binding AfterText}" SortMemberPath="After" Width="100" />
+                    <DataGridTextColumn ElementStyle="{StaticResource WrapCell}" Header="Folder" Binding="{Binding Path}" Width="*" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+    </Grid>
+</UserControl>
